@@ -1,8 +1,5 @@
 <script>
-  import App from "./App.svelte";
-
 export let chain;
-
 
 
 const forward_chain = chain;

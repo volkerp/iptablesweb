@@ -33,6 +33,7 @@ async fn main() {
                 let out = iptables_save().await.unwrap();
                 let mut state = IptablesState::new();
                 state.parse(out).await.unwrap();
+
                 warp::reply::json(&state)
         });
 

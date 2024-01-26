@@ -3,9 +3,9 @@ use crate::iptables::parse::idx_after;
 use serde::Serialize;
 
 #[derive(PartialEq, Debug, Copy, Clone, Default, Serialize)]
-pub(crate) struct Counter {
-    pub(crate) packets: u64,
-    pub(crate) bytes: u64,
+pub struct Counter {
+    pub packets: u64,
+    pub bytes: u64,
 }
 
 impl Counter {
@@ -26,12 +26,6 @@ impl Counter {
             bytes: line[bytes_start..bytes_end].parse().unwrap_or(0),
         }
     }
-
-    #[inline]
-    pub(crate) fn bytes(&self) -> u64 { self.bytes }
-
-    #[inline]
-    pub(crate) fn packets(&self) -> u64 { self.packets }
 }
 
 #[cfg(test)]

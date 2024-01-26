@@ -23,10 +23,9 @@ pub(crate) async fn iptables_save() -> Result<String> {
     String::from_utf8(
         Command::new("iptables-save")
             .arg("-c")
-            .output()
-            .await
-            .with_context(|| format!("Failed to run {cmd}"))?
-            .stdout,
+            .output().await // run the command and wait for it to finish
+            .with_context(|| format!("Failed to run '{cmd}'"))? // '?' is like 'try!'
+            .stdout,  // if 'Ok', return 'stdout'
     )
     .with_context(|| format!("Failed {cmd} output to valid UTF-8"))
 }
