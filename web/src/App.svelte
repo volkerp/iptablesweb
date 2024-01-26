@@ -3,6 +3,14 @@
   import viteLogo from '/vite.svg'
   import Counter from './lib/Counter.svelte'
   import Greeting from './Greeting.svelte'
+  import Table from './Table.svelte'
+
+  import {iptables} from './iptables.js'
+
+  const table_filter = iptables.tables[0]
+  const table_mang = iptables.tables[2]
+
+
 </script>
 
 <main>
@@ -14,10 +22,16 @@
       <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
     </a>
   </div>
-  <h1>Rust + Vite + Svelte</h1>
-
+  
   <!-- Add your new Greeting Component here -->
   <Greeting />
+
+  {#each Object.entries(table_filter.chains) as [chainname, chain]}
+    <Table chain={chain} />
+    <div class="min-h-8"></div>
+  {/each}
+
+  <!-- <Table iptable={table_filter} /> -->
 
   <div class="card">
     <Counter />

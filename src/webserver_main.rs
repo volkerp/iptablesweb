@@ -30,10 +30,10 @@ async fn main() {
 
     let iptables = warp::path!("iptables")
         .then(|| async {
-                let out = iptables_save().await.unwrap();
-                let mut state = IptablesState::new();
-                state.parse(out).await.unwrap();
-                warp::reply::json(&state)
+            let out = iptables_save().await.unwrap();
+            let mut state = IptablesState::new();
+            state.parse(out).await.unwrap();
+            format!("{:#?}", state)
         });
 
     let cors = warp::cors()
@@ -42,7 +42,7 @@ async fn main() {
         .allow_headers(vec!["Content-Type"]);
 
     log::info!("Starting server on http://localhost:3030");
-    warp::serve(hello.or(static_files).or(iptables).with(cors))
+    warp::serve(hello.or(static_files).with(cors))
         .run(([127, 0, 0, 1], 3030))
         .await;
 }
