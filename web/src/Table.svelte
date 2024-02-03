@@ -137,7 +137,7 @@ let rows = [
 }
 
 .header {
-    background-color: white;
+    @apply border bg-white border-stone-200 text-stone-500;
 }
 
 
@@ -146,16 +146,16 @@ let rows = [
 <div class="grid-table">
     <div class="border border-stone-200 col-span-10 bg-stone-200 text-left">Chain {forward_chain.name}</div>    
 
-    <div class="header border border-stone-200 text-stone-500">pkts</div>
-    <div class="header border border-stone-200 text-stone-500">bytes</div>
-    <div class="header border border-stone-200 text-stone-500">target</div>
-    <div class="header border border-stone-200 text-stone-500">prot</div>
-    <div class="header border border-stone-200 text-stone-500">opt</div>
-    <div class="header border border-stone-200 text-stone-500">in</div>
-    <div class="header border border-stone-200 text-stone-500">out</div>
-    <div class="header border border-stone-200 text-stone-500">source</div>
-    <div class="header border border-stone-200 text-stone-500">destination</div>
-    <div class="header border border-stone-200 text-stone-500">match</div>
+    <div class="header">pkts</div>
+    <div class="header">bytes</div>
+    <div class="header">target</div>
+    <div class="header">prot</div>
+    <div class="header">opt</div>
+    <div class="header">in</div>
+    <div class="header">out</div>
+    <div class="header">source</div>
+    <div class="header">destination</div>
+    <div class="header">match</div>
 
     {#each rules as row, index}
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.pkts}</div>
