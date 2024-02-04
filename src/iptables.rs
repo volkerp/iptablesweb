@@ -9,7 +9,7 @@ pub(crate) use counter::Counter;
 pub(crate) use rule::Rule;
 pub(crate) use table::Table;
 
-use serde::Serialize;
+use serde::{Serialize, Serializer};
 use std::{result::Result as StdResult, str::FromStr};
 
 use anyhow::{Context, Result};
@@ -31,10 +31,22 @@ pub(crate) async fn iptables_save() -> Result<String> {
 }
 
 #[allow(dead_code)]
-#[derive(Copy, Clone, PartialEq, Debug, Serialize)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 enum Policy {
     Accept,
     Drop,
+}
+
+impl Serialize for Policy {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match self {
+            Policy::Accept => serializer.serialize_str("ACCEPT"),
+            Policy::Drop => serializer.serialize_str("DROP"),
+        }
+    }
 }
 
 impl FromStr for Policy {
@@ -43,7 +55,7 @@ impl FromStr for Policy {
     fn from_str(s: &str) -> StdResult<Self, Self::Err> {
         match s {
             "Accept" | "ACCEPT" | "accept" => Ok(Self::Accept),
-            "Drop" | "DROP" | "drop" => Ok(Self::Accept),
+            "Drop" | "DROP" | "drop" => Ok(Self::Drop),
             _ => Err(IptablesError::InvalidPolicy(s.into())),
         }
     }

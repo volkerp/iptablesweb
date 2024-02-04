@@ -43,7 +43,7 @@ $: tablename, getIptables()
 {#key chains}
     {#each chains as chain (chain.name)}
         <Table chain={chain} />
-        <div class="min-h-8"></div>
+        <div class="min-h-9"></div>
     {/each}
 {/key} 
 

@@ -63,13 +63,6 @@ impl Chain {
 
         Ok(chain)
     }
-
-    pub(crate) fn policy(&self) -> &str {
-        match self.policy {
-            Some(Policy::Drop) => "DROP",
-            Some(Policy::Accept) | None => "ACCEPT",
-        }
-    }
 }
 
 #[cfg(test)]

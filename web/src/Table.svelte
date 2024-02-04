@@ -2,9 +2,6 @@
 export let chain;
 
 
-const forward_chain = chain;
-
-
 // format int size to human readable
 function format_size(size) {
     if (size < 1024) {
@@ -97,11 +94,26 @@ function parse_rule(ruleobj) {
     return rule;
 }
 
+function is_builtin_chain(tablename, chainname) {
+    if (tablename === "filter") {
+        return chainname === "INPUT" || chainname === "FORWARD" || chainname === "OUTPUT";
+    } else if (tablename === "nat") {
+        return chainname === "PREROUTING" || chainname === "INPUT" || chainname === "OUTPUT" || chainname === "POSTROUTING";
+    } else if (tablename === "mangle") {
+        return chainname === "PREROUTING" || chainname === "INPUT" || chainname === "FORWARD" || chainname === "OUTPUT" || chainname === "POSTROUTING";
+    } else {
+        return false;
+    }    
+}
+
+
+
 const rules = []
-forward_chain.rules.forEach((rule) => {
+chain.rules.forEach((rule) => {
     const ruleobj = parse_rule(rule);
     rules.push(ruleobj);
 });
+
 
 
 
@@ -115,6 +127,15 @@ forward_chain.rules.forEach((rule) => {
 //     }
 // }
 
+function svelte_target_class(target) {
+    if (target === "ACCEPT") {
+        return "text-lime-700";
+    } else if (target === "DROP") {
+        return "text-red-800";
+    } else {
+        return "";
+    }
+}
 
 let rows = [
     { pkts: 0, bytes: 0, target: 'DROP', prot: 'all', opt: '--', in: 'any', out: 'docker0', source: 'anywhere', destination: 'anywhere' },
@@ -144,8 +165,9 @@ let rows = [
 </style>
 
 <div class="grid-table">
-    <div class="border border-stone-200 col-span-10 bg-stone-200 text-left">Chain {forward_chain.name}</div>    
-
+    <div class="border border-stone-200 col-span-10 bg-stone-200 text-left">
+        <span class="text-stone-500">{chain.builtin ? 'built-in' : 'user-defined'} chain </span>{chain.name}
+    </div>
     <div class="header">pkts</div>
     <div class="header">bytes</div>
     <div class="header">target</div>
@@ -160,7 +182,8 @@ let rows = [
     {#each rules as row, index}
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.pkts}</div>
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.bytes}</div>
-        <div class="truncate border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.target}</div>
+        <div class="truncate border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">
+            <span class={svelte_target_class(row.target)}>{row.target}</span></div>
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.prot}</div>
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.opt}</div>
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.in}</div>
@@ -170,8 +193,9 @@ let rows = [
         <div class="overflow-x-auto whitespace-nowrap border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.matchname} {row.matchoptions}</div>
     {/each}
     
-    <div class="border border-stone-200 col-span-10 bg-stone-200 text-left">Policy {forward_chain.policy}</div>    
-
+    {#if chain.builtin}
+    <div class="border border-stone-200 col-span-10 bg-stone-200 text-left"><span class="text-stone-500">Policy <span class={svelte_target_class(chain.policy)}>{chain.policy}</span></div>    
+    {/if}
 
 
 
