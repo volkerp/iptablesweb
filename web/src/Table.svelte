@@ -1,4 +1,6 @@
 <script>
+import { afterUpdate } from "svelte";
+
 export let chain;
 
 
@@ -114,6 +116,64 @@ chain.rules.forEach((rule) => {
     rules.push(ruleobj);
 });
 
+const highel = {}
+let cur_target = null; // current target element highlighted
+
+$: {
+    if (cur_target !== null) {
+        highel[cur_target].forEach((element) => {
+            element.style.backgroundColor = "rgba(245, 232, 0, 0.6)";
+            element.style.transition = "background-color 0.1s ease";
+        });
+    } else {
+        for (const [target, elements] of Object.entries(highel)) {
+            elements.forEach((element) => {
+                element.style.backgroundColor = "";
+                element.style.transition = "background-color 0.2s ease";
+            });
+        }
+    }
+}
+
+
+afterUpdate(() => {
+    document.querySelectorAll('[data-target]').forEach((element) => {
+        const target = element.dataset.target;
+        if (target === "ACCEPT" || target === "DROP" || target === "RETURN") {
+            return
+        }
+
+        highel[target] = highel[target] ? [...highel[target], element] : [element];  // store elements in lookup dict by target
+
+        element.addEventListener('mouseenter', (event) => {
+            cur_target = target
+        }); 
+
+        element.addEventListener('mouseleave', (event) => {
+            if (cur_target !== null)
+                cur_target = null
+        });
+    });
+
+    // document.querySelectorAll('[class*="tgt-"]').forEach((element) => {
+    //     // add hover event handler to element
+        
+
+    //         const tgtClass = Array.from(element.classList).find((className) => className.startsWith("tgt-"));
+            
+    //         console.log(tgtClass);
+
+    //         event.target.parentNode.style.backgroundColor = "rgba(0, 255, 0, 0.4)";
+    //         event.target.parentNode.style.transition = "background-color 0.25s ease";
+    //     });
+    //     element.addEventListener('mouseout', (event) => {
+    //         event.target.parentNode.style.backgroundColor = "";
+    //         event.target.parentNode.style.transition = "background-color 1.0s ease";
+    //     });
+        
+
+})
+
 
 
 
@@ -127,7 +187,7 @@ chain.rules.forEach((rule) => {
 //     }
 // }
 
-function svelte_target_class(target) {
+function policy_color(target) {
     if (target === "ACCEPT") {
         return "text-lime-700";
     } else if (target === "DROP") {
@@ -137,17 +197,17 @@ function svelte_target_class(target) {
     }
 }
 
-let rows = [
-    { pkts: 0, bytes: 0, target: 'DROP', prot: 'all', opt: '--', in: 'any', out: 'docker0', source: 'anywhere', destination: 'anywhere' },
-    { pkts: 0, bytes: 0, target: 'DROP', prot: 'all', opt: '--', in: 'any', out: 'br-3853238d9289', source: 'anywhere', destination: 'anywhere' },
-    { pkts: 0, bytes: 0, target: 'DROP', prot: 'all', opt: '--', in: 'any', out: 'br-276962551cad', source: 'anywhere', destination: 'anywhere' },
-    { pkts: 0, bytes: 0, target: 'DROP', prot: 'all', opt: '--', in: 'any', out: 'br-1aae7d5a106d', source: 'anywhere', destination: 'anywhere' },
-    { pkts: 0, bytes: 0, target: 'DROP', prot: 'all', opt: '--', in: 'any', out: 'br-0e6b69fdd963', source: 'anywhere', destination: 'anywhere' },
-    { pkts: 0, bytes: 0, target: 'DROP', prot: 'all', opt: '--', in: 'any', out: 'br-f7a3e8ca0cbf', source: 'anywhere', destination: 'anywhere' },
-    { pkts: 0, bytes: 0, target: 'DROP', prot: 'all', opt: '--', in: 'any', out: 'br-bd87caed08fb', source: 'anywhere', destination: 'anywhere' },
-    { pkts: 0, bytes: 0, target: 'DROP', prot: 'all', opt: '--', in: 'any', out: 'br-9df2553f0a02', source: 'anywhere', destination: 'anywhere' },
-    { pkts: 0, bytes: 0, target: 'RETURN', prot: 'all', opt: '--', in: 'any', out: 'any', source: 'anywhere', destination: 'anywhere' },
-];
+function class_for_target(target) {
+    if (target === "ACCEPT") {
+        return "text-lime-700";
+    } else if (target === "DROP") {
+        return "text-red-800";
+    } else {
+        return "tgt-" + target;
+    }
+}
+
+
 </script>
 
 <style>
@@ -165,7 +225,7 @@ let rows = [
 </style>
 
 <div class="grid-table">
-    <div class="border border-stone-200 col-span-10 bg-stone-200 text-left">
+    <div class="border border-stone-200 col-span-10 bg-stone-200 text-left" data-target="{chain.name}">
         <span class="text-stone-500">{chain.builtin ? 'built-in' : 'user-defined'} chain </span>{chain.name}
     </div>
     <div class="header">pkts</div>
@@ -182,8 +242,8 @@ let rows = [
     {#each rules as row, index}
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.pkts}</div>
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.bytes}</div>
-        <div class="truncate border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">
-            <span class={svelte_target_class(row.target)}>{row.target}</span></div>
+        <div class="truncate border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}" data-target="{row.target}">
+            <span class={class_for_target(row.target)}>{row.target}</span></div>
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.prot}</div>
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.opt}</div>
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.in}</div>
@@ -194,7 +254,7 @@ let rows = [
     {/each}
     
     {#if chain.builtin}
-    <div class="border border-stone-200 col-span-10 bg-stone-200 text-left"><span class="text-stone-500">Policy <span class={svelte_target_class(chain.policy)}>{chain.policy}</span></div>    
+    <div class="border border-stone-200 col-span-10 bg-stone-200 text-left"><span class="text-stone-500">Policy <span class={policy_color(chain.policy)}>{chain.policy}</span></div>    
     {/if}
 
 
