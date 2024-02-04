@@ -122,7 +122,7 @@ let cur_target = null; // current target element highlighted
 $: {
     if (cur_target !== null) {
         highel[cur_target].forEach((element) => {
-            element.style.backgroundColor = "rgba(245, 232, 0, 0.6)";
+            element.style.backgroundColor = "rgba(227, 250, 0, 0.66)";
             element.style.transition = "background-color 0.1s ease";
         });
     } else {

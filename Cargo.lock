@@ -385,6 +385,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "iptablesweb"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "env_logger",
+ "log",
+ "once_cell",
+ "regex",
+ "rust-embed",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "warp",
+ "warp-embed",
+]
+
+[[package]]
 name = "is-terminal"
 version = "0.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -483,24 +501,6 @@ dependencies = [
  "mime",
  "spin",
  "version_check",
-]
-
-[[package]]
-name = "myapp"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "env_logger",
- "log",
- "once_cell",
- "regex",
- "rust-embed",
- "serde",
- "serde_json",
- "thiserror",
- "tokio",
- "warp",
- "warp-embed",
 ]
 
 [[package]]

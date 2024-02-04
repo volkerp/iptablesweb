@@ -4,7 +4,7 @@ mod iptables;
 use crate::iptables::{iptables_save, IptablesState};
 
 use warp::Filter;
-use warp::http::StatusCode;
+use warp::http::{StatusCode, Uri};
 
 use rust_embed::RustEmbed;
 use warp::reply::json;
@@ -22,11 +22,11 @@ async fn main() {
     }
     env_logger::init();
 
-    // GET /hello/warp => 200 OK with body "Hello, warp!"
-    let hello = warp::path!("myapp" / "hello" / String)
-        .map(|name| format!("Hello, {}!", name));
+    let redirect = warp::path::end().map(|| {
+        warp::redirect::see_other(Uri::from_static("/app"))
+    });
 
-    let static_files = warp::path("myapp")
+    let static_files = warp::path("app")
         .and(warp::get())
         .and(warp_embed::embed(&Static))
         .boxed();
@@ -62,7 +62,7 @@ async fn main() {
         .allow_headers(vec!["Content-Type"]);
 
     log::info!("Starting server on http://localhost:3030");
-    warp::serve(hello.or(static_files).or(iptables).or(error).with(cors))
+    warp::serve(iptables.or(redirect).or(static_files).or(error).with(cors))
         .run(([127, 0, 0, 1], 3030))
         .await;
-}
+    }

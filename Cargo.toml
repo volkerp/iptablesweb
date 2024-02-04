@@ -1,9 +1,10 @@
 [package]
-name = "myapp"
+name = "iptablesweb"
 version = "0.1.0"
+
+# Rust edition needed to build
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 tokio = { version = "1.27", features = ["full"] }
