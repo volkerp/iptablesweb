@@ -1,0 +1,1358 @@
+{
+    "tables": [
+        {
+            "name": "filter",
+            "chains": [
+                {
+                    "name": "INPUT",
+                    "counter": {
+                        "packets": 12,
+                        "bytes": 636
+                    },
+                    "builtin": true,
+                    "policy": "ACCEPT",
+                    "rules": [
+                        {
+                            "rule": "-p tcp -m multiport --dports 22 -j f2b-sshd",
+                            "counter": {
+                                "packets": 837598,
+                                "bytes": 95086010
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-j PVEFW-INPUT",
+                            "counter": {
+                                "packets": 13680452,
+                                "bytes": 4216659806
+                            },
+                            "comment": null
+                        }
+                    ]
+                },
+                {
+                    "name": "FORWARD",
+                    "counter": {
+                        "packets": 3541,
+                        "bytes": 260152
+                    },
+                    "builtin": true,
+                    "policy": "ACCEPT",
+                    "rules": [
+                        {
+                            "rule": "-j PVEFW-FORWARD",
+                            "counter": {
+                                "packets": 29829007,
+                                "bytes": 16114677909
+                            },
+                            "comment": null
+                        }
+                    ]
+                },
+                {
+                    "name": "OUTPUT",
+                    "counter": {
+                        "packets": 1128,
+                        "bytes": 70894
+                    },
+                    "builtin": true,
+                    "policy": "ACCEPT",
+                    "rules": [
+                        {
+                            "rule": "-j PVEFW-OUTPUT",
+                            "counter": {
+                                "packets": 11943278,
+                                "bytes": 21182209635
+                            },
+                            "comment": null
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-Drop",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-j PVEFW-DropBroadcast",
+                            "counter": {
+                                "packets": 662218,
+                                "bytes": 31546469
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p icmp -m icmp --icmp-type 3/4 -j ACCEPT",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p icmp -m icmp --icmp-type 11 -j ACCEPT",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m conntrack --ctstate INVALID -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -m multiport --dports 135,445 -j DROP",
+                            "counter": {
+                                "packets": 42,
+                                "bytes": 2199
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -m udp --dport 137:139 -j DROP",
+                            "counter": {
+                                "packets": 165,
+                                "bytes": 11902
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -m udp --sport 137 --dport 1024:65535 -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m multiport --dports 135,139,445 -j DROP",
+                            "counter": {
+                                "packets": 47369,
+                                "bytes": 2432784
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -m udp --dport 1900 -j DROP",
+                            "counter": {
+                                "packets": 472,
+                                "bytes": 46009
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m tcp ! --tcp-flags FIN,SYN,RST,ACK SYN -j DROP",
+                            "counter": {
+                                "packets": 571,
+                                "bytes": 92398
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -m udp --sport 53 -j DROP",
+                            "counter": {
+                                "packets": 305,
+                                "bytes": 21605
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 610450,
+                                "bytes": 28023804
+                            },
+                            "comment": {
+                                "comment": "PVESIG:83WlR/a4wLbmURFqMQT3uJSgIG8",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-DropBroadcast",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-m addrtype --dst-type BROADCAST -j DROP",
+                            "counter": {
+                                "packets": 2844,
+                                "bytes": 915768
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m addrtype --dst-type MULTICAST -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m addrtype --dst-type ANYCAST -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-d 224.0.0.0/4 -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 659374,
+                                "bytes": 30630701
+                            },
+                            "comment": {
+                                "comment": "PVESIG:NyjHNAtFbkH7WGLamPpdVnxHy4w",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-FORWARD",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-m conntrack --ctstate INVALID -j DROP",
+                            "counter": {
+                                "packets": 357,
+                                "bytes": 31389
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT",
+                            "counter": {
+                                "packets": 26383373,
+                                "bytes": 15880032054
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m physdev --physdev-in fwln+ --physdev-is-bridged -j PVEFW-FWBR-IN",
+                            "counter": {
+                                "packets": 328492,
+                                "bytes": 17807899
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m physdev --physdev-out fwln+ --physdev-is-bridged -j PVEFW-FWBR-OUT",
+                            "counter": {
+                                "packets": 161803,
+                                "bytes": 9820748
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 3445277,
+                                "bytes": 234614466
+                            },
+                            "comment": {
+                                "comment": "PVESIG:qnNexOcGa+y+jebd4dAUqFSp5nw",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-FWBR-IN",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-m conntrack --ctstate INVALID,NEW -j PVEFW-smurfs",
+                            "counter": {
+                                "packets": 328492,
+                                "bytes": 17807899
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 328492,
+                                "bytes": 17807899
+                            },
+                            "comment": {
+                                "comment": "PVESIG:Ijl7/xz0DD7LF91MlLCz0ybZBE0",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-FWBR-OUT",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 161803,
+                                "bytes": 9820748
+                            },
+                            "comment": {
+                                "comment": "PVESIG:2jmj7l5rSw0yVb/vlWAYkK/YBwk",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-HOST-IN",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-i lo -j ACCEPT",
+                            "counter": {
+                                "packets": 1305831,
+                                "bytes": 272101895
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m conntrack --ctstate INVALID -j DROP",
+                            "counter": {
+                                "packets": 19353,
+                                "bytes": 5703250
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT",
+                            "counter": {
+                                "packets": 11584823,
+                                "bytes": 3900902375
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m conntrack --ctstate INVALID,NEW -j PVEFW-smurfs",
+                            "counter": {
+                                "packets": 770445,
+                                "bytes": 37952286
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p igmp -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m tcp --dport 993 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p icmp -j RETURN",
+                            "counter": {
+                                "packets": 5760,
+                                "bytes": 340707
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -m udp --dport 51820 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m tcp --dport 3128 -j RETURN",
+                            "counter": {
+                                "packets": 2332,
+                                "bytes": 127200
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m tcp --dport 8006 -j RETURN",
+                            "counter": {
+                                "packets": 62134,
+                                "bytes": 3728681
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m tcp --dport 22 -j RETURN",
+                            "counter": {
+                                "packets": 38001,
+                                "bytes": 2209229
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m set --match-set PVEFW-0-management-v4 src -m tcp --dport 8006 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m set --match-set PVEFW-0-management-v4 src -m tcp --dport 5900:5999 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m set --match-set PVEFW-0-management-v4 src -m tcp --dport 3128 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m set --match-set PVEFW-0-management-v4 src -m tcp --dport 22 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m set --match-set PVEFW-0-management-v4 src -m tcp --dport 60000:60050 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-j PVEFW-Drop",
+                            "counter": {
+                                "packets": 662218,
+                                "bytes": 31546469
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-j DROP",
+                            "counter": {
+                                "packets": 610450,
+                                "bytes": 28023804
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": {
+                                "comment": "PVESIG:kLTKeGxhpB+DsA1LXgimYGfXyd8",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-HOST-OUT",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-o lo -j ACCEPT",
+                            "counter": {
+                                "packets": 1305831,
+                                "bytes": 272101895
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m conntrack --ctstate INVALID -j DROP",
+                            "counter": {
+                                "packets": 6427,
+                                "bytes": 459624
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT",
+                            "counter": {
+                                "packets": 8706117,
+                                "bytes": 20788369360
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p igmp -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-d 94.130.50.128/26 -p tcp -m tcp --dport 8006 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-d 94.130.50.128/26 -p tcp -m tcp --dport 22 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-d 94.130.50.128/26 -p tcp -m tcp --dport 5900:5999 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-d 94.130.50.128/26 -p tcp -m tcp --dport 3128 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-j RETURN",
+                            "counter": {
+                                "packets": 1924903,
+                                "bytes": 121278756
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": {
+                                "comment": "PVESIG:r0ifs1K6cX1YrNjoEW27RoXkdDI",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-INPUT",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-j PVEFW-HOST-IN",
+                            "counter": {
+                                "packets": 13680452,
+                                "bytes": 4216659806
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 108227,
+                                "bytes": 6405817
+                            },
+                            "comment": {
+                                "comment": "PVESIG:+5iMmLaxKXynOB/+5xibfx7WhFk",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-OUTPUT",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-j PVEFW-HOST-OUT",
+                            "counter": {
+                                "packets": 11943278,
+                                "bytes": 21182209635
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 1924903,
+                                "bytes": 121278756
+                            },
+                            "comment": {
+                                "comment": "PVESIG:LjHoZeSSiWAG3+2ZAyL/xuEehd0",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-Reject",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-j PVEFW-DropBroadcast",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p icmp -m icmp --icmp-type 3/4 -j ACCEPT",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p icmp -m icmp --icmp-type 11 -j ACCEPT",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m conntrack --ctstate INVALID -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -m multiport --dports 135,445 -j PVEFW-reject",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -m udp --dport 137:139 -j PVEFW-reject",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -m udp --sport 137 --dport 1024:65535 -j PVEFW-reject",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m multiport --dports 135,139,445 -j PVEFW-reject",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -m udp --dport 1900 -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m tcp ! --tcp-flags FIN,SYN,RST,ACK SYN -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -m udp --sport 53 -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": {
+                                "comment": "PVESIG:h3DyALVslgH5hutETfixGP08w7c",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-SET-ACCEPT-MARK",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-j MARK --set-xmark 0x80000000/0x80000000",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": {
+                                "comment": "PVESIG:Hg/OIgIwJChBUcWU8Xnjhdd2jUY",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-logflags",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": {
+                                "comment": "PVESIG:MN4PH1oPZeABMuWr64RrygPfW7A",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-reject",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-m addrtype --dst-type BROADCAST -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-s 224.0.0.0/4 -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p icmp -j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -j REJECT --reject-with tcp-reset",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p udp -j REJECT --reject-with icmp-port-unreachable",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p icmp -j REJECT --reject-with icmp-host-unreachable",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-j REJECT --reject-with icmp-host-prohibited",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": {
+                                "comment": "PVESIG:Jlkrtle1mDdtxDeI9QaDSL++Npc",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-smurflog",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-j DROP",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": {
+                                "comment": "PVESIG:2gfT1VMkfr0JL6OccRXTGXo+1qk",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-smurfs",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-s 0.0.0.0/32 -j RETURN",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-m addrtype --src-type BROADCAST -g PVEFW-smurflog",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-s 224.0.0.0/4 -g PVEFW-smurflog",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 1098937,
+                                "bytes": 55760185
+                            },
+                            "comment": {
+                                "comment": "PVESIG:HssVe5QCBXd5mc9kC88749+7fag",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PVEFW-tcpflags",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,PSH,URG -g PVEFW-logflags",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -g PVEFW-logflags",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m tcp --tcp-flags SYN,RST SYN,RST -g PVEFW-logflags",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m tcp --tcp-flags FIN,SYN FIN,SYN -g PVEFW-logflags",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-p tcp -m tcp --sport 0 --tcp-flags FIN,SYN,RST,ACK SYN -g PVEFW-logflags",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": {
+                                "comment": "PVESIG:CMFojwNPqllyqD67NeI5m+bP5mo",
+                                "counter": {
+                                    "packets": 0,
+                                    "bytes": 0
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "f2b-sshd",
+                    "counter": {
+                        "packets": 0,
+                        "bytes": 0
+                    },
+                    "builtin": false,
+                    "policy": null,
+                    "rules": [
+                        {
+                            "rule": "-s 43.153.2.114/32 -j REJECT --reject-with icmp-port-unreachable",
+                            "counter": {
+                                "packets": 47,
+                                "bytes": 3272
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-s 180.101.88.225/32 -j REJECT --reject-with icmp-port-unreachable",
+                            "counter": {
+                                "packets": 104,
+                                "bytes": 6672
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-s 157.245.192.215/32 -j REJECT --reject-with icmp-port-unreachable",
+                            "counter": {
+                                "packets": 42,
+                                "bytes": 2520
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-s 157.230.243.44/32 -j REJECT --reject-with icmp-port-unreachable",
+                            "counter": {
+                                "packets": 63,
+                                "bytes": 4128
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-s 181.47.247.179/32 -j REJECT --reject-with icmp-port-unreachable",
+                            "counter": {
+                                "packets": 56,
+                                "bytes": 3640
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-s 79.137.198.143/32 -j REJECT --reject-with icmp-port-unreachable",
+                            "counter": {
+                                "packets": 44,
+                                "bytes": 2640
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-s 43.135.146.161/32 -j REJECT --reject-with icmp-port-unreachable",
+                            "counter": {
+                                "packets": 66,
+                                "bytes": 4412
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-s 197.5.145.73/32 -j REJECT --reject-with icmp-port-unreachable",
+                            "counter": {
+                                "packets": 44,
+                                "bytes": 2640
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-j RETURN",
+                            "counter": {
+                                "packets": 434949,
+                                "bytes": 68691703
+                            },
+                            "comment": null
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "raw",
+            "chains": [
+                {
+                    "name": "PREROUTING",
+                    "counter": {
+                        "packets": 49189277,
+                        "bytes": 20663458347
+                    },
+                    "builtin": true,
+                    "policy": "ACCEPT",
+                    "rules": [
+                        {
+                            "rule": "-i fwbr+ -j CT --zone 1",
+                            "counter": {
+                                "packets": 8862295,
+                                "bytes": 5773897080
+                            },
+                            "comment": null
+                        }
+                    ]
+                },
+                {
+                    "name": "OUTPUT",
+                    "counter": {
+                        "packets": 11943282,
+                        "bytes": 21182209897
+                    },
+                    "builtin": true,
+                    "policy": "ACCEPT",
+                    "rules": []
+                }
+            ]
+        },
+        {
+            "name": "nat",
+            "chains": [
+                {
+                    "name": "PREROUTING",
+                    "counter": {
+                        "packets": 9231574,
+                        "bytes": 564444690
+                    },
+                    "builtin": true,
+                    "policy": "ACCEPT",
+                    "rules": [
+                        {
+                            "rule": "-i vmbr0 -p tcp -m tcp --dport 80 -j DNAT --to-destination 192.168.100.113:80",
+                            "counter": {
+                                "packets": 136827,
+                                "bytes": 7200352
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-i vmbr0 -p tcp -m tcp --dport 443 -j DNAT --to-destination 192.168.100.113:443",
+                            "counter": {
+                                "packets": 170456,
+                                "bytes": 9329587
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-i vmbr0 -p tcp -m tcp --dport 25 -j DNAT --to-destination 192.168.100.111:25",
+                            "counter": {
+                                "packets": 7041,
+                                "bytes": 376092
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-i vmbr0 -p tcp -m tcp --dport 465 -j DNAT --to-destination 192.168.100.111:465",
+                            "counter": {
+                                "packets": 34712,
+                                "bytes": 2066668
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-i vmbr0 -p tcp -m tcp --dport 587 -j DNAT --to-destination 192.168.100.111:587",
+                            "counter": {
+                                "packets": 2579,
+                                "bytes": 134044
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-i vmbr0 -p tcp -m tcp --dport 143 -j DNAT --to-destination 192.168.100.111:143",
+                            "counter": {
+                                "packets": 8618,
+                                "bytes": 541793
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-i vmbr0 -p tcp -m tcp --dport 993 -j DNAT --to-destination 192.168.100.111:993",
+                            "counter": {
+                                "packets": 9922,
+                                "bytes": 585006
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-i vmbr0 -p tcp -m tcp --dport 4190 -j DNAT --to-destination 192.168.100.111:4190",
+                            "counter": {
+                                "packets": 650,
+                                "bytes": 36260
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-i vmbr0 -p udp -m udp --dport 51820 -j DNAT --to-destination 192.168.100.105:51820",
+                            "counter": {
+                                "packets": 0,
+                                "bytes": 0
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-i vmbr0 -p tcp -m tcp --dport 20622 -j DNAT --to-destination 192.168.100.206:22",
+                            "counter": {
+                                "packets": 21361,
+                                "bytes": 1281372
+                            },
+                            "comment": null
+                        },
+                        {
+                            "rule": "-i vmbr0 -p tcp -m tcp --dport 22207 -j DNAT --to-destination 192.168.100.207:22",
+                            "counter": {
+                                "packets": 117,
+                                "bytes": 6748
+                            },
+                            "comment": null
+                        }
+                    ]
+                },
+                {
+                    "name": "INPUT",
+                    "counter": {
+                        "packets": 108227,
+                        "bytes": 6405817
+                    },
+                    "builtin": true,
+                    "policy": "ACCEPT",
+                    "rules": []
+                },
+                {
+                    "name": "OUTPUT",
+                    "counter": {
+                        "packets": 1562201,
+                        "bytes": 97533750
+                    },
+                    "builtin": true,
+                    "policy": "ACCEPT",
+                    "rules": []
+                },
+                {
+                    "name": "POSTROUTING",
+                    "counter": {
+                        "packets": 2591730,
+                        "bytes": 155516373
+                    },
+                    "builtin": true,
+                    "policy": "ACCEPT",
+                    "rules": [
+                        {
+                            "rule": "-s 192.168.100.0/24 -o vmbr0 -j MASQUERADE",
+                            "counter": {
+                                "packets": 2258485,
+                                "bytes": 167000287
+                            },
+                            "comment": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

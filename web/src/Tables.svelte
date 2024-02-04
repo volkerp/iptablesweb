@@ -3,7 +3,6 @@ import { onMount } from 'svelte';
 
 import Chain from './Chain.svelte'
 
-export let tablename = "filter";
 
 // const table_mang = iptables.tables[2]
 
@@ -11,14 +10,12 @@ const url = import.meta.env.PROD ? '/iptables' : "http://localhost:3030/iptables
 
 let iptables = null;
 let tables = [];
-let table = null;
-let chains = []
 let myerror = null;
 
-let activeTab = 'filter';
 let cur_table = {name: "", chains: []}
 
 async function getIptables() {
+    try {
         const response = await fetch(url);
         if (response.status !== 200) throw new Error((await response.json()).message);
 
@@ -26,23 +23,15 @@ async function getIptables() {
         console.log(iptables);
         tables = iptables.tables;
         cur_table = tables[0]
-        if (tablename === "filter") {
-            table = iptables.tables[0];
-        } else if (tablename === "nat") {
-            table = iptables.tables[1];
-        } else if (tablename === "mangle") {    
-        } else {
-            throw new Error("tablename not found");
-        }
-        myerror = null;
 
-    
-    chains = table?.chains || []
+        myerror = null;
+    } catch (error) {
+        myerror = error;
+        console.error(error);
+    }
 }
 
 onMount(async () => await getIptables())
-
-$: tablename, getIptables()
 
 
 </script>
@@ -66,6 +55,12 @@ $: tablename, getIptables()
         <div class="min-h-9"></div>
     {/each}
 {/key} 
+
+{#if myerror}
+    <div class="text-red-800 bg-red-200 p-4">
+        {myerror.message}
+    </div>
+{/if}
 
 <style>
   .tabactive {

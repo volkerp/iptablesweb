@@ -47,6 +47,7 @@ function parse_rule(ruleobj) {
         fragment: false,
         matchname: " ",
         matchoptions: " ",
+        comment: ruleobj.comment?.comment
     };
     
 
@@ -63,7 +64,7 @@ function parse_rule(ruleobj) {
             rule.matchname = tokens.shift()
             // consume tokens until -m or -j or end of tokens
             token = tokens.shift()
-            while (token !== undefined && token !== "-m" && token !== "-j") {
+            while (token !== undefined && token !== "-m" && token !== "-j" && token !== "-g") {
                 rule.matchoptions += " " + token
                 token = tokens.shift()
             }
@@ -71,8 +72,13 @@ function parse_rule(ruleobj) {
             tokens.unshift(token)
         } else if (token === "-j") {
             rule.target = tokens.shift()
+
+            if (rule.target === "MARK" || rule.target === "HMARK" || rule.target === "CONNMARK" || rule.target === "NFQUEUE" || rule.target === "ULOG" || rule.target === "MASQUERADE" || rule.target === "SNAT" || rule.target === "DNAT" || rule.target === "REDIRECT" || rule.target === "REJECT" || rule.target === "LOG" || rule.target === "DSCP" || rule.target === "TOS" || rule.target === "CLASSIFY" || rule.target === "TCPMSS" || rule.target === "TPROXY" || rule.target === "NETMAP" || rule.target === "SAME" || rule.target === "SET" || rule.target === "SECMARK" || rule.target === "NAT" || rule.target === "MIRROR" || rule.target === "TARPIT" || rule.target === "NOTRACK" || rule.target === "MASQUERADE" || rule.target === "SNAT" || rule.target === "DNAT" || rule.target === "REDIRECT" || rule.target === "REJECT" || rule.target === "LOG" || rule.target === "DSCP" || rule.target === "TOS" || rule.target === "CLASSIFY" || rule.target === "TCPMSS" || rule.target === "TPROXY" || rule.target === "NETMAP" || rule.target === "SAME" || rule.target === "SET" || rule.target === "SECMARK" || rule.target === "NAT" || rule.target === "MIRROR" || rule.target === "TARPIT" || rule.target === "NOTRACK" || rule.target === "MASQUERADE" || rule.target === "SNAT" || rule.target === "DNAT" || rule.target === "REDIRECT" || rule.target === "REJECT" || rule.target === "LOG" || rule.target === "DSCP" || rule.target === "TOS" || rule.target === "CLASSIFY" || rule.target === "TCPMSS" || rule.target === "TPROXY" || rule.target === "NETMAP" || rule.target === "SAME" || rule.target === "SET" || rule.target === "SECMARK" || rule.target === "NAT" || rule.target === "MIRROR" || rule.target === "TARPIT" || rule.target === "NOTRACK" || rule.target === "MASQUADE") {
+                rule.matchoptions = tokens.splice(0, tokens.length).join(" ")  // consume rest of tokens
+            }
         } else if (token === "-g") {
-            rule.goto = tokens.shift()
+            rule.target = tokens.shift()
+            //rule.goto = tokens.shift()
         } else if (token === "-p") {
             rule.prot = negate + tokens.shift()
         } else if (token === "-i") {
@@ -139,7 +145,7 @@ $: {
 afterUpdate(() => {
     document.querySelectorAll('[data-target]').forEach((element) => {
         const target = element.dataset.target;
-        if (target === "ACCEPT" || target === "DROP" || target === "RETURN") {
+        if (target === "ACCEPT" || target === "DROP" || target === "RETURN" || target === "REJECT" || target === "") {
             return
         }
 
@@ -190,7 +196,7 @@ afterUpdate(() => {
 function policy_color(target) {
     if (target === "ACCEPT") {
         return "text-lime-700";
-    } else if (target === "DROP") {
+    } else if (target === "DROP" || target === "REJECT") {
         return "text-red-800";
     } else {
         return "";
@@ -200,7 +206,7 @@ function policy_color(target) {
 function class_for_target(target) {
     if (target === "ACCEPT") {
         return "text-lime-700";
-    } else if (target === "DROP") {
+    } else if (target === "DROP" || target === "REJECT") {
         return "text-red-800";
     } else {
         return "tgt-" + target;
@@ -240,6 +246,9 @@ function class_for_target(target) {
     <div class="header">match</div>
 
     {#each rules as row, index}
+        {#if row.comment}
+        <div class="col-span-10 text-left {index % 2 === 1 ? 'bg-stone-100' : ''}"><span class="text-stone-500">comment: </span>{row.comment}</div>
+        {/if}
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.pkts}</div>
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.bytes}</div>
         <div class="truncate border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}" data-target="{row.target}">
@@ -250,7 +259,7 @@ function class_for_target(target) {
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.out}</div>
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.source}</div>
         <div class="border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.destination}</div>
-        <div class="overflow-x-auto whitespace-nowrap border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.matchname} {row.matchoptions}</div>
+        <div class="overflow-x-auto whitespace-nowrap text-left border-b border-stone-300 {index % 2 === 1 ? 'bg-stone-100' : ''}">{row.matchname} {row.matchoptions}</div>
     {/each}
     
     {#if chain.builtin}

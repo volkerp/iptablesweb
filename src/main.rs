@@ -43,6 +43,7 @@ async fn main() {
                     let response = json!({
                         "message": "Failed to parse iptables-save output. Command iptables-save maybe not in your path or you don't have permissions to run it. Try running as root or with sudo."
                     });
+                    log::error!("Failed to parse iptables-save output. Command iptables-save maybe not in your path or you don't have permissions to run it. Try running as root or with sudo.");
                     warp::reply::with_status(json(&response), StatusCode::INTERNAL_SERVER_ERROR)
                 }
             }
