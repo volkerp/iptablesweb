@@ -38,11 +38,11 @@ jobs:
         - name: Build Binary
           uses: actions-rs/cargo@v1
           with:
-            command: build
+            command: build --release
         - name: Archive binary
           uses: actions/upload-artifact@v4
           with:
             name: iptablesweb
-            path: target/debug/iptablesweb
+            path: target/release/iptablesweb
 
 
