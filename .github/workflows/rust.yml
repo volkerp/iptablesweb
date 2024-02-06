@@ -31,10 +31,10 @@ jobs:
           with:
             toolchain: stable
             override: true
-        - name: Check
-          uses: actions-rs/cargo@v1
-          with:
-            command: check
+
+        - name: Add musl target
+          run: rustup target add x86_64-unknown-linux-musl
+
         - name: Build Binary
           uses: actions-rs/cargo@v1
           with:
