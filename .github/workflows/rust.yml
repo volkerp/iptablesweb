@@ -49,6 +49,6 @@ jobs:
           uses: actions/upload-artifact@v4
           with:
             name: iptablesweb
-            path: target/release/iptablesweb
+            path: target/x86_64-unknown-linux-musl/release/iptablesweb
 
 
