@@ -22,6 +22,7 @@ async function getIptables() {
         iptables = await response.json();
         console.log(iptables);
         tables = iptables.tables;
+        if (tables.length == 0) throw new Error("No tables found. Run as root or with sudo."); 
         cur_table = tables[0]
 
         myerror = null;
