@@ -9,10 +9,22 @@ use warp::http::{StatusCode, Uri};
 use rust_embed::RustEmbed;
 use warp::reply::json;
 use serde_json::json;
+use std::net::IpAddr;
+use structopt::StructOpt;
 
 #[derive(RustEmbed)]
 #[folder = "web/dist"]
 struct Static;
+
+#[derive(Debug, StructOpt)]
+struct Opt {
+    #[structopt(long, default_value = "localhost")]
+    host: String,
+
+    #[structopt(long, default_value = "3030")]
+    port: u16,
+}
+
 
 #[tokio::main]
 async fn main() {
@@ -62,8 +74,16 @@ async fn main() {
         .allow_methods(vec!["GET", "POST"])
         .allow_headers(vec!["Content-Type"]);
 
-    log::info!("Starting server on http://localhost:3030");
+
+    let opt = Opt::from_args();
+
+    log::info!("Starting server on http://{}:{}", opt.host, opt.port);
     warp::serve(iptables.or(redirect).or(static_files).or(error).with(cors))
-        .run(([127, 0, 0, 1], 3030))
+        .run((opt.host.parse::<IpAddr>().unwrap(), opt.port))
         .await;
-    }
+
+}
+
+
+
+    
