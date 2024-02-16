@@ -1,5 +1,6 @@
 <script>
 import { afterUpdate } from "svelte";
+import { tooltip } from "./tooltip";
 
 export let chain;
 
@@ -227,21 +228,68 @@ function class_for_target(target) {
     @apply border bg-white border-stone-200 text-stone-500;
 }
 
-
+:global(.tooltip) {
+		/* white-space: nowrap; */
+		position: relative;
+		/* padding-top: 0.35rem; */
+		/* cursor: zoom-in; */
+	}
+	
+	/* :global(.tooltip::after) {
+		margin: 0 0.15rem 0 0.25rem;
+		content: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="-50 -50 100 100"%3E%3Cg fill="none" stroke="hsl(0, 0%25, 30%25)" stroke-linecap="round"%3E%3Cpath stroke-width="8" d="M -13 -13 m 0 -10 v 20 m 10 -10 h -20" /%3E%3Cg stroke-width="14"%3E%3Ccircle r="30" cx="-13" cy="-13" /%3E%3Cpath d="M 24 24 l 18 18" /%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+	} */
+	
+	:global(#tooltip) {
+		position: absolute;
+		bottom: 100%;
+		right: 0.78rem;
+		transform: translate(50%, 0);
+		padding: 0.2rem 0.35rem;
+		background: hsl(0, 0%, 20%);
+		color: hsl(0, 0%, 98%);
+		font-size: 0.95em;
+		border-radius: 0.25rem;
+		filter: drop-shadow(0 2px 2px hsla(0, 0%, 0%, 0.2));
+        white-space: normal;      
+        max-width: 240px;
+        width: 240px;
+	}
+	
+	:global(.tooltip:not(:focus) #tooltip::before) {
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		width: 0.6em;
+		height: 0.25em;
+		background: inherit;
+		clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+	}
 </style>
 
 <div class="grid-table">
     <div class="border border-stone-200 col-span-10 bg-stone-200 text-left" data-target="{chain.name}">
-        <span class="text-stone-500">{chain.builtin ? 'built-in' : 'user-defined'} chain </span>{chain.name}
+        <span class="text-stone-500">{chain.builtin ? 'built-in' : 'user-defined'} chain </span>{chain.name} 
     </div>
     <div class="header">pkts</div>
     <div class="header">bytes</div>
     <div class="header">target</div>
-    <div class="header">prot</div>
+    <div class="header">
+        <span use:tooltip={"The protocol of the rule or of the packet to check. The specified protocol can be one of tcp, udp, udplite, icmp, icmpv6, esp, ah, sctp, mh or the special keyword 'all' which matches all protocols."}>
+        prot
+        </span>
+    </div>
     <div class="header">opt</div>
     <div class="header">in</div>
     <div class="header">out</div>
-    <div class="header">source</div>
+    <div class="header">
+        <span use:tooltip={"The source address of the rule. This can either be a host name, a network IP address (with /mask), or a plain IP address. The mask can be either a network mask or a plain number, specifying the number of 1's at the left side of the network mask." +
+        "Thus, a mask of 24 is equivalent to 255.255.255.0.  A '!' argument before the address specification inverts the sense of the address."}>
+        source
+        </span>
+    </div>
     <div class="header">destination</div>
     <div class="header">match</div>
 
@@ -263,7 +311,11 @@ function class_for_target(target) {
     {/each}
     
     {#if chain.builtin}
-    <div class="border border-stone-200 col-span-10 bg-stone-200 text-left"><span class="text-stone-500">Policy <span class={policy_color(chain.policy)}>{chain.policy}</span></div>    
+    <div class="border border-stone-200 col-span-10 bg-stone-200 text-left">
+        <span use:tooltip={"If the end of a built-in chain is reached or a rule in a built-in chain with target RETURN is matched, the target specified by the chain policy determines the fate of the packet."}>
+           <span class="text-stone-500">Policy <span class={policy_color(chain.policy)}>{chain.policy}</span>
+        </span>
+    </div>    
     {/if}
 
 
