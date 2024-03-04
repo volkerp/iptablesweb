@@ -3,7 +3,7 @@
 A small rust project that visualizes the contents of iptables in a web interface. 
 
 Also, an example how to embedd a [SPA](https://en.wikipedia.org/wiki/Single-page_application) web application into a rust binary with minimal (or even no) runtime dependencies.
-It uses [svelte](https://svelte.dev), [vite](https://vitejs.dev), [tailwindcss](https://tailwindcss.com) on the web frontend. And rust, [warp](https://github.com/seanmonstar/warp) on the backend. 
+It uses [svelte](https://svelte.dev), [vite](https://vitejs.dev), [tailwindcss](https://tailwindcss.com), [flowbite-svelte](https://flowbite-svelte.com) on the web frontend. And rust, [warp](https://github.com/seanmonstar/warp) on the backend. 
 
 Credits to the Rust+Vite+Svelte project https://github.com/fdeantoni/rust-vite-svelte and the iptables_exporter project https://github.com/kbknapp/iptables_exporter where this project took inspiration and code from.
 
@@ -17,6 +17,10 @@ sudo ./iptablesweb
 ```
 
 The web frontend is accessed on http://localhost:3030
+
+Run with option _--help_ to see the available command line options.
+
+
 
 ## Development
 
