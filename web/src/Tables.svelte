@@ -3,9 +3,6 @@ import { onMount } from 'svelte';
 
 import Chain from './Chain.svelte'
 
-
-// const table_mang = iptables.tables[2]
-
 const url = import.meta.env.PROD ? '/iptables' : "http://localhost:3030/iptables";
 
 let iptables = null;

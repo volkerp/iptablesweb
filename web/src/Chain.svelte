@@ -1,6 +1,6 @@
 <script>
 import { afterUpdate } from "svelte";
-import { tooltip } from "./tooltip";
+import { Tooltip } from 'flowbite-svelte'
 
 export let chain;
 
@@ -228,6 +228,10 @@ function class_for_target(target) {
     @apply border bg-white border-stone-200 text-stone-500;
 }
 
+.mytooltip {
+    @apply p-4 text-lg font-medium bg-purple-500 text-gray-100;
+}
+
 :global(.tooltip) {
 		/* white-space: nowrap; */
 		position: relative;
@@ -275,23 +279,38 @@ function class_for_target(target) {
     </div>
     <div class="header">pkts</div>
     <div class="header">bytes</div>
-    <div class="header">target</div>
-    <div class="header">
-        <span use:tooltip={"The protocol of the rule or of the packet to check. The specified protocol can be one of tcp, udp, udplite, icmp, icmpv6, esp, ah, sctp, mh or the special keyword 'all' which matches all protocols."}>
-        prot
-        </span>
-    </div>
+    <div class="header" id="header_target">target</div>
+    <div class="header" id="header_prot">prot</div>
     <div class="header">opt</div>
-    <div class="header">in</div>
-    <div class="header">out</div>
-    <div class="header">
-        <span use:tooltip={"The source address of the rule. This can either be a host name, a network IP address (with /mask), or a plain IP address. The mask can be either a network mask or a plain number, specifying the number of 1's at the left side of the network mask." +
-        "Thus, a mask of 24 is equivalent to 255.255.255.0.  A '!' argument before the address specification inverts the sense of the address."}>
-        source
-        </span>
-    </div>
-    <div class="header">destination</div>
+    <div class="header" id="header_in">in</div>
+    <div class="header" id="header_out">out</div>
+    <div class="header" id="header_source">source</div>
+    <div class="header" id="header_dest">destination</div>
     <div class="header">match</div>
+    <Tooltip triggeredBy="#header_target" type="custom" defaultClass="" class="border border-stone-300 p-2 text-left bg-stone-100 max-w-prose">
+        A firewall rule specifies criteria for a packet and a target.  If the packet does not match, the next rule in the chain is examined; if it does match, then the next rule is specified by the value of the target, which can be the name of a user-defined chain, one of the targets described in iptables-extensions(8), or one of the special values ACCEPT, DROP or RETURN.<br>
+        ACCEPT means to let the packet through.  DROP means to drop the packet on the floor.  RETURN means stop traversing this chain and resume at the next rule in the previous (calling)  chain.   If  the  end  of  a
+       built-in chain is reached or a rule in a built-in chain with target RETURN is matched, the target specified by the chain policy determines the fate of the packet.
+    </Tooltip>
+    <Tooltip triggeredBy="#header_prot" type="custom" defaultClass="" class="border border-stone-300 p-2 text-left bg-stone-100 max-w-prose">The protocol of the rule or of the packet to check. The specified protocol can be one of tcp, udp, udplite, icmp, icmpv6, esp, ah, sctp, mh or the special keyword 'all' which matches all protocols.</Tooltip>
+    <Tooltip triggeredBy="#header_in" type="custom" defaultClass="" class="border border-stone-300 p-2 text-left bg-stone-100 max-w-prose">
+        Name of an interface via which a packet was received (only for packets entering the INPUT, FORWARD and PREROUTING chains).  When the "!" argument  is  used  before  the  interface  name,
+        the sense is inverted. If the interface name ends in a "+", then any interface which begins with this name will match.
+    </Tooltip>
+    <Tooltip triggeredBy="#header_out" type="custom" defaultClass="" class="border border-stone-300 p-2 text-left bg-stone-100 max-w-prose">
+        Name of an interface via which a packet is going to be sent (for packets entering the FORWARD, OUTPUT and POSTROUTING chains). When the "!" argument is used before the interface name, 
+        the sense is inverted. If the interface name ends in a "+", then any interface which begins with this name will match.
+    </Tooltip>
+    <Tooltip triggeredBy="#header_source" type="custom" defaultClass="" class="border border-stone-300 p-2 text-left bg-stone-100 max-w-prose">
+        The source address of the rule. This can either be a host name, a network IP address (with /mask), or a plain IP address. 
+        The mask can be either a network mask or a plain number, specifying the number of 1's at the left side of the network mask. 
+        Thus, a mask of 24 is equivalent to 255.255.255.0.  A '!' argument before the address specification inverts the sense of the address.
+    </Tooltip>
+    <Tooltip triggeredBy="#header_dest" type="custom" defaultClass="" class="border border-stone-300 p-2 text-left bg-stone-100 max-w-prose">
+        The destination address of the rule. This can either be a host name, a network IP address (with /mask), or a plain IP address. 
+        The mask can be either a network mask or a plain number, specifying the number of 1's at the left side of the network mask. 
+        Thus, a mask of 24 is equivalent to 255.255.255.0.  A '!' argument before the address specification inverts the sense of the address.
+    </Tooltip>
 
     {#each rules as row, index}
         {#if row.comment}
@@ -312,10 +331,9 @@ function class_for_target(target) {
     
     {#if chain.builtin}
     <div class="border border-stone-200 col-span-10 bg-stone-200 text-left">
-        <span use:tooltip={"If the end of a built-in chain is reached or a rule in a built-in chain with target RETURN is matched, the target specified by the chain policy determines the fate of the packet."}>
-           <span class="text-stone-500">Policy <span class={policy_color(chain.policy)}>{chain.policy}</span>
-        </span>
-    </div>    
+        <span class="text-stone-500" id="footer_policy">Policy <span class={policy_color(chain.policy)}>{chain.policy}</span>
+    </div>
+    <Tooltip triggeredBy="#footer_policy" type="custom" defaultClass="" class="border border-stone-300 p-2 text-left bg-stone-100 max-w-prose">If the end of a built-in chain is reached or a rule in a built-in chain with target RETURN is matched, the target specified by the chain policy determines the fate of the packet.</Tooltip>
     {/if}
 
 
