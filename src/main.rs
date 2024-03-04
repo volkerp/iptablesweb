@@ -9,7 +9,7 @@ use warp::http::{StatusCode, Uri};
 use rust_embed::RustEmbed;
 use warp::reply::json;
 use serde_json::json;
-use std::net::IpAddr;
+use std::net::{IpAddr};
 use structopt::StructOpt;
 
 #[derive(RustEmbed)]
@@ -18,10 +18,10 @@ struct Static;
 
 #[derive(Debug, StructOpt)]
 struct Opt {
-    #[structopt(long, default_value = "localhost")]
+    #[structopt(long, default_value = "127.0.0.1", help = "Bind to address")]
     host: String,
 
-    #[structopt(long, default_value = "3030")]
+    #[structopt(long, default_value = "3030", help = "Bind to port")]
     port: u16,
 }
 
@@ -77,9 +77,14 @@ async fn main() {
 
     let opt = Opt::from_args();
 
-    log::info!("Starting server on http://{}:{}", opt.host, opt.port);
+    let addr: IpAddr = opt.host.parse::<IpAddr>().unwrap_or_else(|_| {
+        log::error!("Invalid IP address");
+        std::process::exit(1);
+    });
+
+    log::info!("Starting server on http://{}:{}", addr, opt.port);
     warp::serve(iptables.or(redirect).or(static_files).or(error).with(cors))
-        .run((opt.host.parse::<IpAddr>().unwrap(), opt.port))
+        .run((addr, opt.port))
         .await;
 
 }
